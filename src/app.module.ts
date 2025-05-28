@@ -1,10 +1,13 @@
 import { APP_FILTER } from '@nestjs/core';
-import { Module } from '@nestjs/common';
+import { Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
+import { LoggingMiddleware } from '@/middleware/logging.middleware';
+
+import type { MiddlewareConsumer } from '@nestjs/common';
 
 @Module({
   imports: [
@@ -15,4 +18,8 @@ import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: HttpExceptionFilter }]
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
