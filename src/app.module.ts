@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
+import { ImageModule } from '@/image/image.module';
 import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import { LoggingMiddleware } from '@/middleware/logging.middleware';
 
@@ -13,7 +14,8 @@ import type { MiddlewareConsumer } from '@nestjs/common';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true
-    })
+    }),
+    ImageModule
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: HttpExceptionFilter }]
