@@ -8,6 +8,7 @@ import { ImageModule } from '@/image/image.module';
 import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import { LoggingMiddleware } from '@/middleware/logging.middleware';
 import { HealthModule } from '@/health/health.module';
+import { CsrfModule } from '@/csrf/csrf.module';
 
 import type { MiddlewareConsumer } from '@nestjs/common';
 
@@ -16,6 +17,7 @@ import type { MiddlewareConsumer } from '@nestjs/common';
     ConfigModule.forRoot({
       isGlobal: true
     }),
+    CsrfModule,
     ImageModule,
     HealthModule
   ],
