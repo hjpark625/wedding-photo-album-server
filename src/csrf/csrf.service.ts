@@ -1,8 +1,8 @@
 import { csrfMiddleware } from '@/middleware/csrf.middleware';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { DoubleCsrfUtilities } from 'csrf-csrf';
 
+import type { DoubleCsrfUtilities } from 'csrf-csrf';
 import type { Request, Response } from 'express';
 
 @Injectable()
