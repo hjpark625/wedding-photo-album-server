@@ -4,7 +4,7 @@ import type { DoubleCsrfConfigOptions } from 'csrf-csrf';
 
 function csrfMiddleware({ domain, nodeEnv, secretKey }: { secretKey: string; domain: string; nodeEnv: string }) {
   const csrfConfig: DoubleCsrfConfigOptions = {
-    getSecret: () => secretKey || 'default',
+    getSecret: () => secretKey,
     getSessionIdentifier: (req) => {
       return typeof req.cookies['connect.sid'] === 'string' ? req.cookies['connect.sid'] : '';
     },
@@ -21,7 +21,7 @@ function csrfMiddleware({ domain, nodeEnv, secretKey }: { secretKey: string; dom
     },
     errorConfig: {
       statusCode: 403,
-      message: '유효하지않은 CSRF 토큰입니다.'
+      message: '유효하지 않은 CSRF 토큰입니다.'
     },
     skipCsrfProtection: (req) => req.path.startsWith('/health')
   };
