@@ -42,6 +42,10 @@ env:
   CONTAINER_NAME:
     wedding-photo-container # set this to the name of the container in the
     # containerDefinitions section of your task definition
+  MAIN_DOMAIN: ${{ secrets.MAIN_DOMAIN }}
+  PORT: 4000
+  CSRF_SECRET_KEY: ${{ secrets.CSRF_SECRET_KEY }}
+  CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
 
 permissions:
   contents: read
