@@ -37,15 +37,19 @@ env:
   ECS_SERVICE: wedding-photo-service # set this to your Amazon ECS service name
   ECS_CLUSTER: wedding-server-cluster # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION:
-    '.aws/task-definition.json' # set this to the path to your Amazon ECS task definition
+    '.aws/task-definition-rendered.json' # set this to the path to your Amazon ECS task definition
     # file, e.g. .aws/task-definition.json
   CONTAINER_NAME:
     wedding-photo-container # set this to the name of the container in the
     # containerDefinitions section of your task definition
-  MAIN_DOMAIN: ${{ secrets.MAIN_DOMAIN }}
   PORT: 4000
   CSRF_SECRET_KEY: ${{ secrets.CSRF_SECRET_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+  AWS_CLOUDFRONT_DOMAIN: ${{ secrets.AWS_CLOUDFRONT_DOMAIN }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+  MAIN_DOMAIN: ${{ secrets.MAIN_DOMAIN }}
 
 permissions:
   contents: read
@@ -65,6 +69,18 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Inject secrets into task definition
+        run: |
+          export PORT=${{ env.PORT }}
+          export CSRF_SECRET_KEY=${{ secrets.CSRF_SECRET_KEY }}
+          export AWS_REGION=${{ secrets.AWS_REGION }}
+          export AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+          export AWS_CLOUDFRONT_DOMAIN=${{ secrets.AWS_CLOUDFRONT_DOMAIN }}
+          export CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
+          export MAIN_DOMAIN=${{ secrets.MAIN_DOMAIN }}
+
+          envsubst < .aws/task-definition.json > .aws/task-definition-rendered.json
 
       - name: Login to Amazon ECR
         id: login-ecr
