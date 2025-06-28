@@ -31,7 +31,6 @@ lerna-debug.log*
 # IDE - VSCode
 .vscode/*
 
-.aws
 
 # dotenv environment variable files
 .env
