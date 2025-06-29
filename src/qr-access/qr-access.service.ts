@@ -8,8 +8,8 @@ export class QrAccessService {
 
   validateQrAccessToken(expires?: string, sig?: string) {
     const secret = this.configService.get<string>('QR_ACCESS_SECRET_KEY');
-
-    console.log(secret);
+    const masterExpires = this.configService.get<string>('QR_ACCESS_MASTER_EXPIRES');
+    const masterSignature = this.configService.get<string>('QR_ACCESS_MASTER_SIGNATURE');
 
     if (!secret) {
       throw new InternalServerErrorException('QR_ACCESS_SECRET_KEY가 설정되지 않았습니다.');
@@ -17,6 +17,10 @@ export class QrAccessService {
 
     if (!expires || !sig) {
       throw new UnauthorizedException('유효하지 않은 QR 코드입니다.');
+    }
+
+    if (expires === masterExpires && sig === masterSignature) {
+      return { message: '유효한 마스터 QR 코드입니다.' };
     }
 
     // 1. 만료 체크
