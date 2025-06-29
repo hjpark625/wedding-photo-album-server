@@ -1,98 +1,110 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Wedding Photo Album Server
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS 기반의 웨딩 사진 업로드 목적의 서버입니다.  
+AWS S3 연동 이미지 업로드, CSRF 보호 등 RESTful API를 제공합니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 주요 기능
 
-## Description
+- **이미지 업로드**: 여러 장의 이미지를 한 번에 업로드하고, AWS S3에 저장
+- **CSRF 보호**: double submit cookie 방식의 CSRF 방어
+  - Header와 Cookie에 CSRF 토큰을 포함하여 요청
+- **헬스 체크**: 서버 상태 확인 API 제공
+  - 배포 이후 로드밸런서와 연동
+- **로깅 미들웨어**: 모든 요청/응답 로깅
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 기술 스택
 
-## Project setup
+![NestJS](https://img.shields.io/badge/Nest_JS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)  
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)  
+![AWS_ECS](https://img.shields.io/badge/AWS_ECS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)  
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white)  
+![PNPM](https://img.shields.io/badge/pnpm-222?style=for-the-badge&logo=pnpm&logoColor=white)
 
-```bash
-$ pnpm install
+## 설치 및 실행
+
+> 이 프로젝트는 Node.js v22.13.0 이상에서 실행됩니다.  
+> nvm을 사용중이라면 `nvm use` 를 활용해 버전을 맞춰주세요.
+
+### 1. 환경 변수 설정
+
+아래 환경 변수를 `.env` 파일에 설정합니다.
+
+```plaintext
+PORT=서버포트
+CSRF_SECRET_KEY=CSRF 비밀키
+AWS_ACCESS_KEY_ID=AWS 액세스 키 ID
+AWS_SECRET_ACCESS_KEY=AWS 비밀 액세스 키
+AWS_REGION=AWS 리전 (예: ap-northeast-2)
+AWS_S3_BUCKET_NAME=저장될 이미지 AWS S3 버킷 이름
+AWS_CLOUDFRONT_DOMAIN=이미지 cdn용 도메인
+CORS_ORIGIN=프론트엔드 서비스 도메인
+MAIN_DOMAIN=메인 도메인
 ```
 
-## Compile and run the project
+### 2. 의존성 설치
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+pnpm install
 ```
 
-## Run tests
+### 3. 개발 서버 실행
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+pnpm start:dev
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 4. 프로덕션 빌드 및 실행
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+pnpm build
+pnpm start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## API 엔드포인트
 
-## Resources
+### 1. 헬스 체크
 
-Check out a few resources that may come in handy when working with NestJS:
+- Method: `GET`
+- endpoint: `/health`
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Response
 
-## Support
+```ts
+// 별도의 인터페이스 없음
+OK;
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 2. CSRF 토큰 발급
 
-## Stay in touch
+- Method: `GET`
+- endpoint: `/csrf/token`
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Response
 
-## License
+```json
+{
+  "csrfToken": "CSRF 토큰 값"
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 3. 이미지 업로드
+
+- Method: `POST`
+- endpoint: `/image/upload`
+
+Request
+
+```ts
+// 최대 20장, jpeg/png/webp, 150MB 이하
+interface UploadImageRequest {
+  files: FormData; // Key: "images", Value: File[]
+}
+```
+
+Response
+
+```json
+{
+  "imageUrls": string[] // 업로드된 이미지 cdn URL 배열
+}
+```
