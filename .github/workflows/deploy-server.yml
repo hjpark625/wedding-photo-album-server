@@ -2,12 +2,12 @@ name: Deploy to Amazon ECS
 
 on:
   workflow_dispatch:
-  push:
-    paths-ignore:
-      - .github/**
-      - README.md
-      - .gitignore
-    branches: ['main']
+  # push:
+  #   paths-ignore:
+  #     - .github/**
+  #     - README.md
+  #     - .gitignore
+  #   branches: ['main']
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
