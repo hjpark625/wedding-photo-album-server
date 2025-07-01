@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import { LoggingMiddleware } from '@/middleware/logging.middleware';
 import { HealthModule } from '@/health/health.module';
 import { CsrfModule } from '@/csrf/csrf.module';
+import { QrAccessModule } from '@/qr-access/qr-access.module';
 
 import type { MiddlewareConsumer } from '@nestjs/common';
 
@@ -19,6 +20,7 @@ import type { MiddlewareConsumer } from '@nestjs/common';
     }),
     CsrfModule,
     ImageModule,
+    QrAccessModule,
     HealthModule
   ],
   controllers: [AppController],
