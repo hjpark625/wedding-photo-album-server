@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
+import { toZonedTime, format } from 'date-fns-tz';
 
 @Injectable()
 export class QrAccessService {
@@ -33,10 +34,13 @@ export class QrAccessService {
     const data = `expires=${expires}`;
     const expectedSig = crypto.createHmac('sha256', secret).update(data).digest('hex');
 
+    const zonedTime = toZonedTime(new Date(Number(expires)), 'Asia/Seoul');
+    const formattedExpiresTime = format(zonedTime, 'yyyy-MM-dd HH:mm:ss', { timeZone: 'Asia/Seoul' });
+
     if (sig !== expectedSig) {
       throw new ForbiddenException('유효하지 않은 QR 코드입니다.');
     }
 
-    return { message: '유효한 QR 코드입니다.' };
+    return { message: '유효한 QR 코드입니다.', expiresAt: formattedExpiresTime };
   }
 }
